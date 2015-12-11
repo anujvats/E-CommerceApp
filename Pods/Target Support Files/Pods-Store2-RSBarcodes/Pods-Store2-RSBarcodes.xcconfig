@@ -1,0 +1,1 @@
+PODS_STORE__RSBARCODES_OTHER_LDFLAGS = -framework "AVFoundation" -framework "CoreImage"

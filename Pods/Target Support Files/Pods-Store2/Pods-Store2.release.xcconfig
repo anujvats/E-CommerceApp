@@ -1,0 +1,6 @@
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/MBProgressHUD" "${PODS_ROOT}/Headers/Public/RSBarcodes" "${PODS_ROOT}/Headers/Public/Rover" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/UIActivityIndicator-for-SDWebImage" "${PODS_ROOT}/Headers/Public/ZXingObjC"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/MBProgressHUD" -isystem "${PODS_ROOT}/Headers/Public/RSBarcodes" -isystem "${PODS_ROOT}/Headers/Public/Rover" -isystem "${PODS_ROOT}/Headers/Public/SDWebImage" -isystem "${PODS_ROOT}/Headers/Public/UIActivityIndicator-for-SDWebImage" -isystem "${PODS_ROOT}/Headers/Public/ZXingObjC"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"Pods-Store2-MBProgressHUD" -l"Pods-Store2-RSBarcodes" -l"Pods-Store2-Rover" -l"Pods-Store2-SDWebImage" -l"Pods-Store2-UIActivityIndicator-for-SDWebImage" -l"Pods-Store2-ZXingObjC" -framework "AVFoundation" -framework "Accelerate" -framework "CoreGraphics" -framework "CoreImage" -framework "CoreLocation" -framework "CoreMedia" -framework "CoreVideo" -framework "ImageIO" -framework "QuartzCore"
+OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
+PODS_ROOT = ${SRCROOT}/Pods

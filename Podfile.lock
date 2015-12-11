@@ -1,0 +1,48 @@
+PODS:
+  - MBProgressHUD (0.9.1)
+  - Rover (0.30.10):
+    - Rover/Core (= 0.30.10)
+    - Rover/Model (= 0.30.10)
+    - Rover/Networking (= 0.30.10)
+    - Rover/UI (= 0.30.10)
+    - RSBarcodes (~> 0.1)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - Rover/Core (0.30.10):
+    - Rover/Model
+    - RSBarcodes (~> 0.1)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - Rover/Model (0.30.10):
+    - RSBarcodes (~> 0.1)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - Rover/Networking (0.30.10):
+    - Rover/Model
+    - RSBarcodes (~> 0.1)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - Rover/UI (0.30.10):
+    - Rover/Model
+    - RSBarcodes (~> 0.1)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - RSBarcodes (0.1)
+  - SDWebImage (3.7.2):
+    - SDWebImage/Core (= 3.7.2)
+  - SDWebImage/Core (3.7.2)
+  - UIActivityIndicator-for-SDWebImage (1.2):
+    - SDWebImage (~> 3.7)
+  - ZXingObjC (3.1.0):
+    - ZXingObjC/All (= 3.1.0)
+  - ZXingObjC/All (3.1.0)
+
+DEPENDENCIES:
+  - MBProgressHUD (~> 0.9.1)
+  - Rover
+  - ZXingObjC (~> 3.0)
+
+SPEC CHECKSUMS:
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
+  Rover: 123235ac10ada1fcb0b0f4ba4e21a52b60405ae9
+  RSBarcodes: 96ad32377a0142aa9dcc547cbc60b8e9bb20b2fb
+  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
+  ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
+
+COCOAPODS: 0.37.1
