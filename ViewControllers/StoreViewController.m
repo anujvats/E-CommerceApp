@@ -17,6 +17,9 @@ static NSString *const cellreuseIdentifier = @"StoreNameCell";
 
 @interface StoreViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate>
 
+@property(nonatomic)NSInteger totalStores;
+@property(nonatomic)NSInteger totalPages;
+@property(nonatomic) NSInteger currentPage;
 @property(nonatomic,strong) NSMutableArray *storeArray;
 @property(nonatomic,strong) NSMutableArray *beforeSearchArray;
 
@@ -29,28 +32,17 @@ static NSString *const cellreuseIdentifier = @"StoreNameCell";
     // Do any additional setup after loading the view.
 
     self.beforeSearchArray = [[NSMutableArray alloc] init];
-    
-    [[Webserivces alloc] loadCompleteStoreListwithCompletionBlock:^(id storeDetails, NSError *error) {
-        
-        __weak StoreViewController *storeViewController = self;
-        
-        dispatch_async(dispatch_get_main_queue(),^{
-            
-            storeViewController.storeArray = [[NSMutableArray alloc] initWithArray:storeDetails];
-            
-            [storeViewController.tableView reloadData];
-        });
-        
-        
-    }];
-    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.searchBar.delegate = self;
     
+    self.storeArray = [[NSMutableArray alloc] init];
+
+    [self loadStoreData:0];
+    
     
 [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([StoreNameTableViewCell class]) bundle:nil] forCellReuseIdentifier:cellreuseIdentifier];
-    //[rover.customer setCustomerID:];
+   
     
 }
 
@@ -84,7 +76,14 @@ static NSString *const cellreuseIdentifier = @"StoreNameCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    return [self.storeArray count];
+    if (self.currentPage == self.totalPages
+        
+        || self.totalStores == self.storeArray.count) {
+        
+        return self.storeArray.count;
+    }
+    
+    return self.storeArray.count;
     
 }
 
@@ -127,6 +126,46 @@ static NSString *const cellreuseIdentifier = @"StoreNameCell";
 }
 
 
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row == [self.storeArray count] - 1 ) {
+        
+        
+        if (self.currentPage < self.totalPages) {
+            
+              [self loadStoreData:++self.currentPage];
+        }
+        
+      
+    
+    }
+
+}
+
+
+-(void)loadStoreData:(NSInteger)pageNumber{
+    
+    
+    [[Webserivces alloc] loadCompleteStoreListwithPageID:pageNumber andCompletionBlock:^(id storeDetails, NSInteger totalPages, NSInteger totalStores, NSInteger currentPage, NSError *error) {
+    
+        self.totalPages = totalPages;
+        self.totalStores = totalStores;
+        self.currentPage = currentPage;
+        
+        [self.storeArray addObjectsFromArray:storeDetails];
+        
+        
+        dispatch_async(dispatch_get_main_queue(),^{
+            
+            [self.tableView reloadData];
+        });
+        
+    }];
+    
+}
+
+
 #pragma SearchBar delegate
 
 
@@ -162,8 +201,9 @@ static NSString *const cellreuseIdentifier = @"StoreNameCell";
     
     NSString *search = searchBar.text;
     
-    [[Webserivces alloc] loadSearchStores:search andCompletion:^(id storeDetails, NSError *error) {
+    [[Webserivces alloc] loadSearchStores:search andCompletion:^(id storeDetails, NSInteger totalPages, NSInteger totalStores, NSInteger currentPage, NSError *error) {
     
+        
         self.beforeSearchArray = self.storeArray;
         
         dispatch_async(dispatch_get_main_queue(),^{
@@ -172,6 +212,7 @@ static NSString *const cellreuseIdentifier = @"StoreNameCell";
             
             [self.tableView reloadData];
         });
+        
         
     }];
     

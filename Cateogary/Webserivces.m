@@ -17,6 +17,10 @@
 static NSString *const keyProducts = @"products";
 static NSString *const keyProductImage = @"images";
 static NSString *const keyStores = @"stores";
+static NSString *const keytotalPages = @"totalPages";
+static NSString *const keytotalResults = @"totalResults";
+static NSString *const keycurrentPage= @"currentPage";
+static NSString *const keypagination = @"pagination";
 
 @implementation Webserivces
 
@@ -31,9 +35,9 @@ static NSString *const keyStores = @"stores";
 }
 
 
--(void)loadCateogaryProductfromHybriswithCateogaryCaode:(NSString *)cateogaryCode andCompletioBlock:(ProductModelBlock)productModelBlock{
+-(void)loadCateogaryProductfromHybriswithCateogaryCaode:(NSString *)cateogaryCode andPageID:(NSInteger )pageID andCompletioBlock:(ProductModelBlock)productModelBlock{
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001/rest/v1/retailCo-uk/products?query=::%@&clear=true&pageSize=20&currentPage=0&lang=en",cateogaryCode];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001/rest/v1/retailCo-uk/products?query=::%@&clear=true&pageSize=20&currentPage=%li&lang=en",cateogaryCode,(long)pageID];
 
     
     (void)[[DataProvider alloc] initWithRequestURL:urlString completionBlock:^(NSData *data, NSError *error) {
@@ -46,6 +50,14 @@ static NSString *const keyStores = @"stores";
         NSArray *productArrayJSON =[NSArray array];
         
         productArrayJSON =[jsonDictionary valueForKey:keyProducts];
+        
+        
+        NSDictionary *paginationDict= [jsonDictionary valueForKey:keypagination];
+        
+        NSInteger totalProducts = [[paginationDict  valueForKey:keytotalResults] integerValue];
+        NSInteger totalPages = [[paginationDict valueForKey:keytotalPages] integerValue];
+        NSInteger currentPages = [[paginationDict valueForKey:keycurrentPage] integerValue];
+        
         
         for (NSDictionary *productDictionary in productArrayJSON) {
             
@@ -64,7 +76,7 @@ static NSString *const keyStores = @"stores";
        
         dispatch_async(dispatch_queue_create("Product array return queue", NULL), ^{
         
-            productModelBlock(productsArray,nil);
+            productModelBlock(productsArray,totalPages,totalProducts,currentPages,nil);
         });
         
         
@@ -75,7 +87,7 @@ static NSString *const keyStores = @"stores";
 
 -(void)loadProductwithProductCode:(NSString *)productCode andCompletionBlock:(ProductDetailModelBlock)productDetail{
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001/rest/v1/retailCo-uk/products/%@?options=BASIC,CATEGORIES,CLASSIFICATION,DESCRIPTION,GALLERY,PRICE,PROMOTIONS,REVIEW,STOCK,VARIANT_FULL&lang=en",productCode];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001/rest/v1/retailCo-uk/products/%@?options=BASIC,CATEGORIES,CLASSIFICATION,DESCRIPTION,GALLERY,PRICE,PROMOTIONS,REVIEW,STOCK,VARIANT_FULL&lang=en",productCode];
     
     
    (void)[[DataProvider alloc] initWithRequestURL:urlString completionBlock:^(NSData *data, NSError *error) {
@@ -117,7 +129,7 @@ static NSString *const keyStores = @"stores";
 -(void)addProductToCartWithCode:(NSString *)code quantity:(NSInteger)quantity completionBlock:(cartDetailsBlock)cartDetails{
     
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001/rest/v1/retailCo-uk/cart/entry"];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001/rest/v1/retailCo-uk/cart/entry"];
     
     NSString *postBody = [NSString stringWithFormat:@"code=%@&qty=%li", code, (long)quantity];
     
@@ -178,7 +190,7 @@ static NSString *const keyStores = @"stores";
 
 - (void)cartWithCompletionBlock:(cartModelBlock)completionBlock {
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001/rest/v1/retailCo-uk/cart"];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001/rest/v1/retailCo-uk/cart"];
     
     
     (void)[[DataProvider alloc] initWithRequestURL:urlString completionBlock:^(NSData *jsonData, NSError *error) {
@@ -238,10 +250,10 @@ static NSString *const keyStores = @"stores";
 - (void)deleteProductInCartAtEntry:(NSInteger)entry completionBlock:(cartModelBlock)completionBlock {
     
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001/rest/v1/retailCo-uk/cart/entry"];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001/rest/v1/retailCo-uk/cart/entry"];
     
-    (void)[[DataProvider alloc] initWithURL:[NSString stringWithFormat:@"%@/%i",urlString,
-                                                         entry] httpMethod:@"DELETE" httpBody:nil completionBlock:^(NSData *jsonData, NSError *error)
+    (void)[[DataProvider alloc] initWithURL:[NSString stringWithFormat:@"%@/%li",urlString,
+                                                         (long)entry] httpMethod:@"DELETE" httpBody:nil completionBlock:^(NSData *jsonData, NSError *error)
     {
         if (jsonData) {
             
@@ -292,10 +304,10 @@ static NSString *const keyStores = @"stores";
     }];
 }
 
--(void)loadCompleteStoreListwithCompletionBlock:(storeDetailsBlock)storeDetailsBlock{
+-(void)loadCompleteStoreListwithPageID:(NSInteger)pageID andCompletionBlock:(storeDetailsBlock)storeDetailsBlock{
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001/rest/v1/retailCo-uk/stores"];
-    http://localhost:9001/rest/v1/retailCo-uk/stores/?query=london&options=HOURS&currentPage=0&lang=en
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001/rest/v1/retailCo-uk/stores/?options=HOURS&currentPage=%li&lang=en",(long)pageID];
+
     (void)[[DataProvider alloc] initWithRequestURL:urlString completionBlock:^(NSData *data, NSError *error) {
         
         NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -306,6 +318,12 @@ static NSString *const keyStores = @"stores";
         
         storesArray = [jsonDictionary valueForKey:keyStores];
         
+        
+        NSDictionary *paginationDict= [jsonDictionary valueForKey:keypagination];
+        
+        NSInteger totalStores = [[paginationDict  valueForKey:keytotalResults] integerValue];
+        NSInteger totalPages = [[paginationDict valueForKey:keytotalPages] integerValue];
+        NSInteger currentPages = [[paginationDict valueForKey:keycurrentPage] integerValue];
         
         for (NSDictionary *dictionary in storesArray) {
             
@@ -323,7 +341,7 @@ static NSString *const keyStores = @"stores";
         
         dispatch_async(dispatch_queue_create("Store array return queue", NULL), ^{
             
-            storeDetailsBlock(storeModels,nil);
+             storeDetailsBlock(storeModels,totalPages,totalStores,currentPages,nil);
         });
     
     }];
@@ -335,7 +353,7 @@ static NSString *const keyStores = @"stores";
 -(void)loadSearchStores:(NSString *)searchString andCompletion:(storeDetailsBlock)storeDetailsBlock{
     
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001/rest/v1/retailCo-uk/stores/?query=%@&options=HOURS&currentPage=0&lang=en",searchString];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001/rest/v1/retailCo-uk/stores/?query=%@&options=HOURS&currentPage=0&lang=en",searchString];
 
     (void)[[DataProvider alloc] initWithRequestURL:urlString completionBlock:^(NSData *data, NSError *error) {
         
@@ -346,6 +364,12 @@ static NSString *const keyStores = @"stores";
         NSMutableArray *storeModels = [[NSMutableArray alloc] init];
         
         storesArray = [jsonDictionary valueForKey:keyStores];
+        
+        NSDictionary *paginationDict= [jsonDictionary valueForKey:keypagination];
+        
+        NSInteger totalStores = [[paginationDict  valueForKey:keytotalResults] integerValue];
+        NSInteger totalPages = [[paginationDict valueForKey:keytotalPages] integerValue];
+        NSInteger currentPages = [[paginationDict valueForKey:keycurrentPage] integerValue];
         
         
         for (NSDictionary *dictionary in storesArray) {
@@ -364,7 +388,7 @@ static NSString *const keyStores = @"stores";
         
         dispatch_async(dispatch_queue_create("Store array return queue", NULL), ^{
             
-            storeDetailsBlock(storeModels,nil);
+            storeDetailsBlock(storeModels,totalPages,totalStores,currentPages,nil);
         });
         
     }];

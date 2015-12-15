@@ -12,7 +12,8 @@
 
 @interface ProductCollectionViewController : UICollectionViewController
 
-@property(nonatomic,strong)NSArray *productModelArray;
+@property(nonatomic,strong)NSMutableArray *productModelArray;
 @property(nonatomic,strong)NSString *productCode;
+@property(nonatomic,strong) NSString *cateogaryCode;
 
 @end

@@ -41,7 +41,7 @@ typedef void (^IsImageLoadedSucessfully)(BOOL succeeded, UIImage *image);
     }
   
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001%@",self.imageURL];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001%@",self.imageURL];
     
     
     NSURL *url = [NSURL URLWithString:urlString];

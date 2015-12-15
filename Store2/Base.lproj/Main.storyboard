@@ -258,7 +258,7 @@
                                 </view>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OrderSummaryCell" rowHeight="84" id="ghn-rJ-21V" customClass="OrderSummaryTableViewCell">
-                                        <rect key="frame" x="0.0" y="130" width="320" height="84"/>
+                                        <rect key="frame" x="0.0" y="66" width="320" height="84"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ghn-rJ-21V" id="jgf-bF-a77">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="83"/>

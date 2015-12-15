@@ -116,19 +116,8 @@
     
     NSString *string = [array objectAtIndex:0];
     
-    
-    [[Webserivces sharedInstance] loadCateogaryProductfromHybriswithCateogaryCaode:string andCompletioBlock:^(id productresults, NSError *error) {
-    
-        __weak ShopViewController *shopViewController = self;
-        
-        dispatch_async(dispatch_get_main_queue(),^{
-            
-            [shopViewController performSegueWithIdentifier:@"ProductCollectionViewSegue" sender:productresults];
-        });
+    [self performSegueWithIdentifier:@"ProductCollectionViewSegue" sender:string];
 
-        
-   }];
-    
     
 }
 
@@ -139,7 +128,7 @@
     
     ProductCollectionViewController *productCollectionVC = [segue destinationViewController];
     
-    productCollectionVC.productModelArray = sender;
+    productCollectionVC.cateogaryCode = sender;
     
     
 }

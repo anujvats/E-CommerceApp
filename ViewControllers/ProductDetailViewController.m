@@ -81,7 +81,7 @@ NSString *const AddedToCart = @"ItemAddedToCart";
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(xcordinate, 0, 320, 455)];
             
             
-            NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001%@",imageModel.imageURL];
+            NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001%@",imageModel.imageURL];
             
             NSURL *url = [NSURL URLWithString:urlString];
             
