@@ -126,7 +126,7 @@ typedef void (^IsImageLoadedSucessfully)(BOOL succeeded, UIImage *image);
         for (ImageModel *imageModel in productModel.imageModel) {
             
             
-            NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001%@",imageModel.imageURL];
+            NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001%@",imageModel.imageURL];
             
             
             NSURL *url = [NSURL URLWithString:urlString];

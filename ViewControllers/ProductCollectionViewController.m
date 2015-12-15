@@ -19,6 +19,10 @@ typedef void (^IsImageLoadedSucessfully)(BOOL succeeded, UIImage *image);
 
 @interface ProductCollectionViewController ()
 
+@property(nonatomic) NSInteger totalProducts;
+@property(nonatomic) NSInteger totalPages;
+@property(nonatomic) NSInteger currentPage;
+
 @end
 
 @implementation ProductCollectionViewController
@@ -31,6 +35,10 @@ typedef void (^IsImageLoadedSucessfully)(BOOL succeeded, UIImage *image);
     [super viewDidLoad];
     
     UINib *nib = [UINib nibWithNibName:@"ProductCell" bundle:[NSBundle mainBundle]];
+    
+    self.productModelArray = [[NSMutableArray alloc] init];
+    
+    [self fetchResultswithPageNumber:0];
     
     [self.collectionView registerNib:nib forCellWithReuseIdentifier:@"ProductCell"];
     
@@ -91,7 +99,7 @@ typedef void (^IsImageLoadedSucessfully)(BOOL succeeded, UIImage *image);
     
     ImageModel *imageModel = [productModel.imageModel objectAtIndex:0];
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.93:9001%@",imageModel.imageURL];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.217.98.75:9001%@",imageModel.imageURL];
     
     NSURL *url = [NSURL URLWithString:urlString];
     
@@ -118,7 +126,39 @@ typedef void (^IsImageLoadedSucessfully)(BOOL succeeded, UIImage *image);
 
 
 
+-(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+ 
+    
+    
+    
+    
+    
+}
 
+
+-(void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    NSLog(@"Index Path : %li",(long)indexPath.row);
+    
+    
+    NSLog(@"product Model Array :%li",(long)[self.productModelArray count]);
+    
+    if (indexPath.row == [self.productModelArray count]-10) {
+        
+        
+        if (self.currentPage < self.totalPages) {
+            
+            [self fetchResultswithPageNumber:++self.currentPage];
+            
+        }
+        
+        
+    }
+    
+}
 
 #pragma mark <UICollectionViewDelegate>
 
@@ -137,7 +177,6 @@ typedef void (^IsImageLoadedSucessfully)(BOOL succeeded, UIImage *image);
     ProductCollectionViewCell *productCollectionCell = (ProductCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     
     
-   
     
   [[Webserivces sharedInstance]loadProductwithProductCode:productCollectionCell.productCode andCompletionBlock:^(id productDetails, NSError *error) {
       
@@ -197,7 +236,32 @@ typedef void (^IsImageLoadedSucessfully)(BOOL succeeded, UIImage *image);
     
 }
 
-
+-(void)fetchResultswithPageNumber:(NSInteger)pageNumber{
+    
+    
+    [[Webserivces sharedInstance] loadCateogaryProductfromHybriswithCateogaryCaode:self.cateogaryCode andPageID:pageNumber andCompletioBlock:^(id productresults,NSInteger totalPages,NSInteger totalProducts,NSInteger currentPage, NSError *error) {
+        
+        
+        self.currentPage = currentPage;
+        self.totalPages = totalPages;
+        self.totalProducts = totalProducts;
+        
+        
+        [self.productModelArray addObjectsFromArray:productresults];
+        
+        dispatch_async(dispatch_get_main_queue(),^{
+            
+            [self.collectionView reloadData];
+            
+        });
+        
+        
+    }];
+    
+    
+    
+    
+}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     
